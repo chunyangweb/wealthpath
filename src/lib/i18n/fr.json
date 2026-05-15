@@ -1,0 +1,298 @@
+{
+  "app": {
+    "name": "Wealthpath",
+    "tagline": "Projetez votre trésorerie, vérifiez votre liquidité."
+  },
+  "nav": {
+    "section_steps": "Étapes",
+    "section_views": "Vues",
+    "inputs": "Données",
+    "allocation": "Allocation",
+    "simulation": "Simulation",
+    "summary": "Résumé",
+    "projection": "Projection",
+    "liquidity": "Liquidité"
+  },
+  "home": {
+    "title": "Planifiez votre cash flow personnel",
+    "subtitle": "Simulez votre trésorerie future selon vos allocations dans les produits d'épargne français — Livret A, LDDS, LEP, PEA, assurance-vie, PER et plus.",
+    "privacy": "Vos données ne quittent jamais votre navigateur.",
+    "cta": "Commencer",
+    "features": {
+      "projection": {
+        "title": "Projection de cash flow",
+        "body": "Comparez deux scénarios : sans investissement, et avec votre allocation."
+      },
+      "liquidity": {
+        "title": "Suivi de liquidité",
+        "body": "Visualisez vos fonds liquides, semi-liquides et bloqués sur toute la durée."
+      },
+      "private": {
+        "title": "100% privé",
+        "body": "Aucune inscription, aucun serveur. Vos données restent dans votre navigateur."
+      }
+    }
+  },
+  "inputs": {
+    "title": "Vos données",
+    "subtitle": "Renseignez votre situation actuelle. Tout est sauvegardé automatiquement dans votre navigateur.",
+    "profile": {
+      "title": "Profil",
+      "situation_label": "Situation",
+      "situation_student": "Étudiant·e",
+      "situation_employed": "Salarié·e",
+      "situation_freelance": "Indépendant·e",
+      "situation_help": "Utilisé pour suggérer une allocation adaptée à votre profil.",
+      "household_label": "Foyer fiscal",
+      "household_single": "Personne seule",
+      "household_couple": "Couple",
+      "household_help": "Influe sur les abattements d'assurance-vie après 8 ans."
+    },
+    "balance": {
+      "title": "Solde actuel",
+      "label": "Liquidités disponibles aujourd'hui",
+      "placeholder": "ex. 12 000",
+      "help": "Total de votre compte courant et livrets accessibles immédiatement."
+    },
+    "incomes": {
+      "title": "Revenus",
+      "subtitle": "Salaire, freelance, bourse, allocations… tout ce qui rentre régulièrement.",
+      "add": "Ajouter un revenu",
+      "empty": "Aucun revenu ajouté. Cliquez sur « Ajouter un revenu » pour commencer.",
+      "placeholder_label": "ex. Salaire net",
+      "placeholder_amount": "ex. 2 400"
+    },
+    "recurring_expenses": {
+      "title": "Dépenses récurrentes",
+      "subtitle": "Loyer, prêts, abonnements, courses, factures…",
+      "add": "Ajouter une dépense récurrente",
+      "empty": "Aucune dépense récurrente. Cliquez pour en ajouter.",
+      "placeholder_label": "ex. Loyer",
+      "placeholder_amount": "ex. 850"
+    },
+    "one_off_expenses": {
+      "title": "Dépenses ponctuelles",
+      "subtitle": "Travaux, vacances, mariage, achat de voiture, impôts annuels…",
+      "add": "Ajouter une dépense ponctuelle",
+      "empty": "Aucune dépense ponctuelle prévue.",
+      "placeholder_label": "ex. Travaux cuisine",
+      "placeholder_amount": "ex. 15 000"
+    },
+    "horizon": {
+      "title": "Horizon de projection",
+      "subtitle": "Sur combien d'années voulez-vous projeter votre trésorerie ?",
+      "years_label": "an(s)"
+    },
+    "row": {
+      "label": "Libellé",
+      "amount": "Montant",
+      "frequency": "Fréquence",
+      "start_date": "Date de début",
+      "end_date": "Date de fin",
+      "end_date_optional": "Date de fin (optionnel)",
+      "remove": "Supprimer cette ligne"
+    },
+    "frequency": {
+      "one-off": "Ponctuelle",
+      "daily": "Journalière",
+      "weekly": "Hebdomadaire",
+      "monthly": "Mensuelle",
+      "yearly": "Annuelle"
+    },
+    "summary": {
+      "title": "Synthèse",
+      "monthly_income": "Revenus mensuels",
+      "monthly_expenses": "Dépenses mensuelles",
+      "monthly_savings": "Épargne mensuelle",
+      "starting_balance": "Solde de départ"
+    },
+    "actions": {
+      "continue": "Continuer vers l'allocation",
+      "saved": "Sauvegardé"
+    }
+  },
+  "allocation": {
+    "title": "Allocation",
+    "subtitle": "Répartissez votre épargne et visualisez l'impact.",
+    "profile": {
+      "label": "Suggestion de départ",
+      "help": "Point de départ — déplacez les curseurs pour ajuster.",
+      "prudent": "Prudent",
+      "balanced": "Équilibré",
+      "dynamic": "Dynamique"
+    },
+    "capital": {
+      "to_allocate": "Capital à allouer",
+      "total_allocated": "Total alloué",
+      "remaining": "Restant",
+      "over_allocated": "Surallouation"
+    },
+    "pool": {
+      "liquid": "Liquide",
+      "semi": "Semi-liquide",
+      "locked": "Bloqué"
+    },
+    "products_section": "Produits",
+    "rate": "Taux",
+    "rate_edit_hint": "Cliquez pour modifier",
+    "cap": "Plafond",
+    "no_cap": "Pas de plafond",
+    "lockin": "Bloqué",
+    "lockin_pea": "Bloqué 5 ans",
+    "lockin_pel": "Tout retrait clôt le plan",
+    "lockin_per": "Bloqué jusqu'à la retraite",
+    "lockin_av": "Disponible avec friction fiscale",
+    "custom": {
+      "title": "Produit personnalisé",
+      "label_placeholder": "ex. Crypto, Bons d'employeur, Obligation",
+      "rate_label": "Rendement annuel (%, net d'impôt)",
+      "lockin_label": "Liquidité",
+      "lockin_liquid": "Disponible",
+      "lockin_locked": "Bloqué",
+      "help": "Définissez vos propres paramètres. Le rendement est traité comme net d'impôt.",
+      "amount_label": "Montant",
+      "name_label": "Nom",
+      "empty_state": "Aucun produit personnalisé. Ajoutez-en un pour modéliser un placement non listé.",
+      "add": "Activer le produit personnalisé"
+    },
+    "products": {
+      "livret-a": {
+        "name": "Livret A",
+        "info": "Livret réglementé, totalement défiscalisé. Disponibilité immédiate. Plafond 22 950 €."
+      },
+      "ldds": {
+        "name": "LDDS",
+        "info": "Livret de Développement Durable et Solidaire. Conditions similaires au Livret A, plafond 12 000 €."
+      },
+      "lep": {
+        "name": "LEP",
+        "info": "Livret d'Épargne Populaire. Le mieux rémunéré des livrets, mais soumis à conditions de revenus."
+      },
+      "livret-jeune": {
+        "name": "Livret Jeune",
+        "info": "Réservé aux 12-25 ans. Taux fixé par la banque, au moins celui du Livret A. Plafond 1 600 €."
+      },
+      "cel": {
+        "name": "CEL",
+        "info": "Compte Épargne Logement. Lié à l'éligibilité à un prêt immobilier."
+      },
+      "pel": {
+        "name": "PEL",
+        "info": "Plan Épargne Logement. Taux verrouillé pour la durée du plan, mais tout retrait clôt le plan."
+      },
+      "av-fonds-euros": {
+        "name": "Assurance-vie · fonds euros",
+        "info": "Capital garanti. Fiscalité avantageuse après 8 ans. Disponibilité sous quelques jours."
+      },
+      "av-uc": {
+        "name": "Assurance-vie · UC",
+        "info": "Unités de compte : ETF, SCPI, fonds actions. Pas de garantie. Risque équivalent aux marchés."
+      },
+      "pea": {
+        "name": "PEA",
+        "info": "Plan Épargne en Actions. Plafond 150 000 €. Bloqué 5 ans, puis 0% d'IR sur les plus-values."
+      },
+      "per": {
+        "name": "PER",
+        "info": "Plan Épargne Retraite. Versements déductibles du revenu imposable. Bloqué jusqu'à la retraite."
+      },
+      "cto": {
+        "name": "CTO",
+        "info": "Compte-Titres Ordinaire. Pas de plafond, pas de blocage. PFU 31,4% sur les gains."
+      }
+    },
+    "timeline": {
+      "start_date": "Date de début",
+      "end_date_optional": "Date de fin (optionnel)",
+      "end_date_min_hint": "min. 5 ans après le début"
+    },
+    "actions": {
+      "continue": "Continuer vers la simulation",
+      "back": "Retour aux données"
+    },
+    "warnings": {
+      "over_capacity": "Vous avez alloué plus que votre capital disponible.",
+      "exceeds_cap": "Plafond du produit dépassé"
+    }
+  },
+  "simulation": {
+    "title": "Simulation",
+    "subtitle": "Visualisez l'impact projeté de votre allocation.",
+    "allocation_summary": "Votre allocation",
+    "modify": "Modifier",
+    "no_allocation": "Aucun produit alloué. Retournez à l'allocation pour commencer.",
+    "horizon": {
+      "title": "Horizon de simulation",
+      "subtitle": "Sur combien d'années voulez-vous projeter ?",
+      "one_year": "1 an",
+      "years_label": "ans"
+    },
+    "projection": {
+      "title": "Projection",
+      "subtitle": "Croissance composée de votre allocation vs. épargne non investie.",
+      "kpi_with": "Portefeuille dans {{years}} an(s)",
+      "kpi_without": "Sans investissement dans {{years}} an(s)",
+      "kpi_interest": "Intérêts générés",
+      "kpi_gain_pct": "Gain vs. liquidités",
+      "series_with": "Avec investissement",
+      "series_without": "Sans investissement",
+      "disclaimer": "Projection basée sur des taux constants et des intérêts composés annuels. Les taux peuvent évoluer. Ceci ne constitue pas un conseil en investissement."
+    },
+    "liquidity": {
+      "title": "Liquidité dans le temps",
+      "subtitle": "Quelle sera l'accessibilité de votre épargne à chaque étape de l'horizon ?",
+      "pool_liquid": "Liquide",
+      "pool_semi": "Semi-liquide",
+      "pool_locked": "Bloqué",
+      "disclaimer": "Liquidité indicative. Le PEA devient semi-liquide après 5 ans à compter de la date de début. Le PEL et le PER restent bloqués sur toute la durée."
+    },
+    "actions": {
+      "back": "Retour à l'allocation",
+      "continue": "Voir le résumé"
+    }
+  },
+  "summary": {
+    "title": "Résumé",
+    "subtitle": "Votre situation financière complète en un coup d'œil.",
+    "situation": {
+      "title": "Votre situation",
+      "balance": "Solde de départ",
+      "income": "Revenus mensuels",
+      "expenses": "Dépenses mensuelles",
+      "savings": "Épargne mensuelle nette"
+    },
+    "allocation": {
+      "chart_title": "Répartition de l'allocation",
+      "title": "Détail de l'allocation",
+      "none": "Aucun produit alloué."
+    },
+    "projection": {
+      "title": "Résultat dans 1 an",
+      "with": "Valeur du portefeuille",
+      "without": "Sans investissement",
+      "interest": "Intérêts générés",
+      "gain_pct": "Gain vs. liquidités"
+    },
+    "liquidity": {
+      "title": "Liquidité dans {{years}} an(s)",
+      "liquid": "Liquide",
+      "semi": "Semi-liquide",
+      "locked": "Bloqué"
+    },
+    "actions": {
+      "back": "Retour à la simulation",
+      "reset": "Recommencer",
+      "reset_confirm": "Cela effacera toutes vos données.",
+      "reset_yes": "Oui, tout effacer"
+    }
+  },
+  "common": {
+    "comingSoon": "Bientôt disponible",
+    "back": "Retour",
+    "cancel": "Annuler"
+  },
+  "footer": {
+    "disclaimer": "Simulation à but informatif uniquement. Ne constitue pas un conseil en investissement au sens de l'article L321-1 du Code monétaire et financier.",
+    "source": "Code source"
+  }
+}

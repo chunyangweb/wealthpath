@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Creamy green palette — approved in mockup */
+    --background: 75 32% 95%;            /* #f4f7ee cream page bg */
+    --background-soft: 78 38% 92%;       /* #eef3e3 slightly darker cream */
+    --foreground: 120 12% 20%;           /* #2d3a2d near-black with green tint */
+
+    --card: 0 0% 100%;
+    --card-foreground: 120 12% 20%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 120 12% 20%;
+
+    --primary: 120 19% 45%;              /* #5d8a5d sage-deep — buttons, active state */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 88 33% 84%;             /* #e7efde very light sage — highlights */
+    --secondary-foreground: 120 19% 35%;
+
+    --muted: 76 38% 92%;                 /* cream */
+    --muted-foreground: 105 6% 42%;      /* #5c6b5c ink-soft */
+    --muted-foreground-2: 105 6% 57%;    /* #8a978a ink-mute */
+
+    --accent: 88 33% 84%;
+    --accent-foreground: 120 19% 35%;
+
+    --destructive: 0 60% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --warning: 38 75% 88%;               /* #fef6e4 warning bg */
+    --warning-border: 38 75% 76%;        /* #f5d491 warning border */
+    --warning-foreground: 38 75% 31%;    /* #8a6914 warning text */
+
+    --border: 75 24% 89%;                /* #e4eadb soft borders */
+    --input: 75 24% 89%;
+    --ring: 120 19% 45%;
+
+    /* Liquidity pool colors */
+    --pool-liquid: 120 23% 59%;          /* #7faf7f */
+    --pool-semi: 41 53% 62%;             /* #d4b266 */
+    --pool-locked: 120 6% 51%;           /* #9ba99b */
+
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    /* Prevent layout shift when scrollbar appears/disappears */
+    scrollbar-gutter: stable;
+  }
+  body {
+    background-color: hsl(var(--background));
+    background-image:
+      radial-gradient(ellipse at top left, #e9f1dc 0%, transparent 50%),
+      radial-gradient(ellipse at top right, #f0f5e3 0%, transparent 50%),
+      linear-gradient(180deg, #f4f7ee 0%, #f7f9f0 100%);
+    background-attachment: fixed;
+    color: hsl(var(--foreground));
+    font-feature-settings:
+      'rlig' 1,
+      'calt' 1;
+    font-size: 16px;
+  }
+  /* Tabular numerals for all money figures */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+  /* Custom range slider matching the mockup */
+  input[type='range'] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 0.25rem;
+    background: hsl(var(--border));
+    border-radius: 0.125rem;
+    outline: none;
+  }
+  input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1rem;
+    height: 1rem;
+    background: hsl(var(--primary));
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 0 0 1px hsl(var(--primary));
+  }
+  input[type='range']::-moz-range-thumb {
+    width: 1rem;
+    height: 1rem;
+    background: hsl(var(--primary));
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid white;
+  }
+}

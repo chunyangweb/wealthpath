@@ -1,0 +1,298 @@
+{
+  "app": {
+    "name": "Wealthpath",
+    "tagline": "Project your cash flow, check your liquidity."
+  },
+  "nav": {
+    "section_steps": "Steps",
+    "section_views": "Views",
+    "inputs": "Data",
+    "allocation": "Allocation",
+    "simulation": "Simulation",
+    "summary": "Summary",
+    "projection": "Projection",
+    "liquidity": "Liquidity"
+  },
+  "home": {
+    "title": "Plan your personal cash flow",
+    "subtitle": "Simulate your future cash position based on how you allocate across French savings products — Livret A, LDDS, LEP, PEA, life insurance, retirement and more.",
+    "privacy": "Your data never leaves your browser.",
+    "cta": "Get started",
+    "features": {
+      "projection": {
+        "title": "Cash flow projection",
+        "body": "Compare two scenarios: no investment, and with your allocation."
+      },
+      "liquidity": {
+        "title": "Liquidity tracking",
+        "body": "See your liquid, semi-liquid, and locked funds over the full horizon."
+      },
+      "private": {
+        "title": "100% private",
+        "body": "No signup, no server. Your data stays in your browser."
+      }
+    }
+  },
+  "inputs": {
+    "title": "Your data",
+    "subtitle": "Enter your current financial situation. Everything saves automatically to your browser.",
+    "profile": {
+      "title": "Profile",
+      "situation_label": "Situation",
+      "situation_student": "Student",
+      "situation_employed": "Employed",
+      "situation_freelance": "Freelance",
+      "situation_help": "Used to suggest an allocation suited to your profile.",
+      "household_label": "Household",
+      "household_single": "Single",
+      "household_couple": "Couple",
+      "household_help": "Affects life insurance allowances after 8 years."
+    },
+    "balance": {
+      "title": "Current balance",
+      "label": "Cash available today",
+      "placeholder": "e.g. 12,000",
+      "help": "Total in your checking account and immediately accessible savings."
+    },
+    "incomes": {
+      "title": "Income",
+      "subtitle": "Salary, freelance, scholarship, benefits — anything that comes in regularly.",
+      "add": "Add an income",
+      "empty": "No income added. Click 'Add an income' to start.",
+      "placeholder_label": "e.g. Net salary",
+      "placeholder_amount": "e.g. 2,400"
+    },
+    "recurring_expenses": {
+      "title": "Recurring expenses",
+      "subtitle": "Rent, loans, subscriptions, groceries, utilities…",
+      "add": "Add a recurring expense",
+      "empty": "No recurring expenses. Click to add one.",
+      "placeholder_label": "e.g. Rent",
+      "placeholder_amount": "e.g. 850"
+    },
+    "one_off_expenses": {
+      "title": "One-off expenses",
+      "subtitle": "Renovations, vacations, wedding, car purchase, annual taxes…",
+      "add": "Add a one-off expense",
+      "empty": "No one-off expenses planned.",
+      "placeholder_label": "e.g. Kitchen renovation",
+      "placeholder_amount": "e.g. 15,000"
+    },
+    "horizon": {
+      "title": "Projection horizon",
+      "subtitle": "How many years do you want to project ahead?",
+      "years_label": "year(s)"
+    },
+    "row": {
+      "label": "Label",
+      "amount": "Amount",
+      "frequency": "Frequency",
+      "start_date": "Start date",
+      "end_date": "End date",
+      "end_date_optional": "End date (optional)",
+      "remove": "Remove this row"
+    },
+    "frequency": {
+      "one-off": "One-off",
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "yearly": "Yearly"
+    },
+    "summary": {
+      "title": "Summary",
+      "monthly_income": "Monthly income",
+      "monthly_expenses": "Monthly expenses",
+      "monthly_savings": "Monthly savings",
+      "starting_balance": "Starting balance"
+    },
+    "actions": {
+      "continue": "Continue to allocation",
+      "saved": "Saved"
+    }
+  },
+  "allocation": {
+    "title": "Allocation",
+    "subtitle": "Distribute your savings and see the impact.",
+    "profile": {
+      "label": "Starting suggestion",
+      "help": "A starting point — drag the sliders to adjust.",
+      "prudent": "Prudent",
+      "balanced": "Balanced",
+      "dynamic": "Dynamic"
+    },
+    "capital": {
+      "to_allocate": "Capital to allocate",
+      "total_allocated": "Total allocated",
+      "remaining": "Remaining",
+      "over_allocated": "Over-allocated"
+    },
+    "pool": {
+      "liquid": "Liquid",
+      "semi": "Semi-liquid",
+      "locked": "Locked"
+    },
+    "products_section": "Products",
+    "rate": "Rate",
+    "rate_edit_hint": "Click to edit",
+    "cap": "Cap",
+    "no_cap": "No cap",
+    "lockin": "Locked",
+    "lockin_pea": "Locked for 5 years",
+    "lockin_pel": "Any withdrawal closes the plan",
+    "lockin_per": "Locked until retirement",
+    "lockin_av": "Available with tax friction",
+    "custom": {
+      "title": "Custom product",
+      "label_placeholder": "e.g. Crypto, Employer shares, Bond",
+      "rate_label": "Annual return (%, net of tax)",
+      "lockin_label": "Liquidity",
+      "lockin_liquid": "Available",
+      "lockin_locked": "Locked",
+      "help": "Set your own parameters. Return is treated as net of tax.",
+      "amount_label": "Amount",
+      "name_label": "Name",
+      "empty_state": "No custom product. Add one to model a product not in the list.",
+      "add": "Enable custom product"
+    },
+    "products": {
+      "livret-a": {
+        "name": "Livret A",
+        "info": "French regulated savings account, fully tax-free. Instant access. Cap €22,950."
+      },
+      "ldds": {
+        "name": "LDDS",
+        "info": "Sustainable Development Savings Account. Same terms as Livret A, cap €12,000."
+      },
+      "lep": {
+        "name": "LEP",
+        "info": "Popular Savings Account. Highest regulated rate, but income-restricted."
+      },
+      "livret-jeune": {
+        "name": "Youth Savings",
+        "info": "Ages 12-25 only. Bank-set rate, at least the Livret A rate. Cap €1,600."
+      },
+      "cel": {
+        "name": "CEL",
+        "info": "Home Savings Account. Linked to mortgage eligibility."
+      },
+      "pel": {
+        "name": "PEL",
+        "info": "Home Savings Plan. Rate locked for the life of the plan, but any withdrawal closes it."
+      },
+      "av-fonds-euros": {
+        "name": "Life insurance · euro fund",
+        "info": "Capital-guaranteed. Tax-advantaged after 8 years. Available in a few days."
+      },
+      "av-uc": {
+        "name": "Life insurance · UC",
+        "info": "Units of account: ETFs, REITs, equity funds. No guarantee. Market-equivalent risk."
+      },
+      "pea": {
+        "name": "PEA",
+        "info": "Stock Savings Plan. Cap €150,000. Locked for 5 years, then 0% income tax on gains."
+      },
+      "per": {
+        "name": "PER",
+        "info": "Retirement Savings Plan. Contributions deductible from taxable income. Locked until retirement."
+      },
+      "cto": {
+        "name": "Brokerage account",
+        "info": "Standard brokerage account. No cap, no lock-in. PFU 31.4% on gains."
+      }
+    },
+    "timeline": {
+      "start_date": "Start date",
+      "end_date_optional": "End date (optional)",
+      "end_date_min_hint": "min. 5 years from start"
+    },
+    "actions": {
+      "continue": "Continue to simulation",
+      "back": "Back to data"
+    },
+    "warnings": {
+      "over_capacity": "You have allocated more than your available capital.",
+      "exceeds_cap": "Product cap exceeded"
+    }
+  },
+  "simulation": {
+    "title": "Simulation",
+    "subtitle": "See the projected impact of your allocation.",
+    "allocation_summary": "Your allocation",
+    "modify": "Modify",
+    "no_allocation": "No products allocated yet. Go back and set up your allocation.",
+    "horizon": {
+      "title": "Simulation horizon",
+      "subtitle": "How many years do you want to project ahead?",
+      "one_year": "1 year",
+      "years_label": "years"
+    },
+    "projection": {
+      "title": "Projection",
+      "subtitle": "Compound growth of your allocation vs. holding cash.",
+      "kpi_with": "Portfolio in {{years}}y",
+      "kpi_without": "Cash only in {{years}}y",
+      "kpi_interest": "Returns earned",
+      "kpi_gain_pct": "Gain vs. cash",
+      "series_with": "With investment",
+      "series_without": "Without investment",
+      "disclaimer": "Projection based on constant rates and annual compounding. Rates may change. This is not investment advice."
+    },
+    "liquidity": {
+      "title": "Liquidity over time",
+      "subtitle": "How accessible will your money be at each point in the horizon?",
+      "pool_liquid": "Liquid",
+      "pool_semi": "Semi-liquid",
+      "pool_locked": "Locked",
+      "disclaimer": "Liquidity is indicative. PEA becomes semi-liquid after 5 years from start date. PEL and PER remain locked for the full duration."
+    },
+    "actions": {
+      "back": "Back to allocation",
+      "continue": "View summary"
+    }
+  },
+  "summary": {
+    "title": "Summary",
+    "subtitle": "Your full financial picture at a glance.",
+    "situation": {
+      "title": "Your situation",
+      "balance": "Starting balance",
+      "income": "Monthly income",
+      "expenses": "Monthly expenses",
+      "savings": "Net monthly savings"
+    },
+    "allocation": {
+      "chart_title": "Allocation breakdown",
+      "title": "Allocation detail",
+      "none": "No products allocated."
+    },
+    "projection": {
+      "title": "Outcome in 1 year",
+      "with": "Portfolio value",
+      "without": "Without investing",
+      "interest": "Returns earned",
+      "gain_pct": "Gain vs. cash"
+    },
+    "liquidity": {
+      "title": "Liquidity in {{years}} year(s)",
+      "liquid": "Liquid",
+      "semi": "Semi-liquid",
+      "locked": "Locked"
+    },
+    "actions": {
+      "back": "Back to simulation",
+      "reset": "Start over",
+      "reset_confirm": "This will erase all your data.",
+      "reset_yes": "Yes, clear everything"
+    }
+  },
+  "common": {
+    "comingSoon": "Coming soon",
+    "back": "Back",
+    "cancel": "Cancel"
+  },
+  "footer": {
+    "disclaimer": "For informational purposes only. Does not constitute investment advice within the meaning of article L321-1 of the French Monetary and Financial Code.",
+    "source": "Source code"
+  }
+}
