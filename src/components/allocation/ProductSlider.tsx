@@ -4,6 +4,7 @@ import type { Product } from '@/types/product';
 import type { ProductTimeline } from '@/state/allocationStore';
 import { useSettingsStore } from '@/state/settingsStore';
 import { formatCurrency } from '@/lib/utils/formatCurrency';
+import { Label } from '@/components/ui/Input';
 import { PoolDot } from './PoolDot';
 import { RateBadge } from './RateBadge';
 
@@ -69,6 +70,17 @@ export function ProductSlider({
     product.lockIn.kind === 'until-event' && product.lockIn.event === '5-years'
       ? t('allocation.timeline.end_date_min_hint')
       : undefined;
+  const startDateId = `${product.id}-start-date`;
+  const endDateId = `${product.id}-end-date`;
+
+  function handleStartDateChange(startDate: string) {
+    const nextEndDateMin = minEndDate(product, startDate);
+    const endDate =
+      timeline.endDate && timeline.endDate < nextEndDateMin
+        ? undefined
+        : timeline.endDate;
+    onTimelineChange({ ...timeline, startDate, endDate });
+  }
 
   return (
     <div className="border-b border-border px-4 py-3.5 last:border-b-0">
@@ -92,6 +104,7 @@ export function ProductSlider({
             <Lock
               className="h-3 w-3 shrink-0 text-muted-foreground2"
               aria-label={lockInLabel}
+              role="img"
             />
           )}
         </div>
@@ -121,31 +134,31 @@ export function ProductSlider({
       </div>
 
       {/* Row 2: timeline inputs */}
-      <div className="mt-3 grid grid-cols-2 gap-3">
+      <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
-          <label className="mb-1 block text-xs text-muted-foreground">
+          <Label htmlFor={startDateId} className="mb-1">
             {t('allocation.timeline.start_date')}
-          </label>
+          </Label>
           <input
+            id={startDateId}
             type="date"
             value={timeline.startDate}
-            onChange={(e) =>
-              onTimelineChange({ ...timeline, startDate: e.target.value })
-            }
+            onChange={(e) => handleStartDateChange(e.target.value)}
             className="w-full rounded-md border border-border bg-background px-2 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
             required
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs text-muted-foreground">
+          <Label htmlFor={endDateId} className="mb-1">
             {t('allocation.timeline.end_date_optional')}
             {endDateHint && (
               <span className="ml-1 text-muted-foreground2">
                 ({endDateHint})
               </span>
             )}
-          </label>
+          </Label>
           <input
+            id={endDateId}
             type="date"
             value={timeline.endDate ?? ''}
             min={endDateMin}

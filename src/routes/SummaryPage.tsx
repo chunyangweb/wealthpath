@@ -2,31 +2,25 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, RotateCcw } from 'lucide-react';
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  ResponsiveContainer,
-} from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 
 import { TopBar } from '@/components/layout/TopBar';
 import { useShellContext } from '@/components/layout/useShellContext';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/Card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 
 import { PRODUCTS, getDefaultRate } from '@/data/products.fr';
-import { useAllocationStore, type StandardProductId } from '@/state/allocationStore';
+import { useAllocationStore } from '@/state/allocationStore';
 import { useUserInputsStore } from '@/state/userInputsStore';
 import { useSettingsStore } from '@/state/settingsStore';
 import { formatCurrency } from '@/lib/utils/formatCurrency';
 import { sumMonthly } from '@/lib/utils/frequencyToMonthly';
-import { computeProjection, type ProductProjectionInput } from '@/lib/finance/projection';
+import { computeProjection } from '@/lib/finance/projection';
+import {
+  buildProjectionProducts,
+  getAllocatedStandardProducts,
+  sumProductAmounts,
+} from '@/lib/finance/allocationInputs';
 
 const TODAY = new Date().toISOString().slice(0, 10);
 
@@ -58,7 +52,9 @@ function StatRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between py-2.5">
       <span className="text-sm text-muted-foreground">{label}</span>
-      <span className="text-sm font-semibold tabular-nums text-foreground">{value}</span>
+      <span className="text-sm font-semibold tabular-nums text-foreground">
+        {value}
+      </span>
     </div>
   );
 }
@@ -95,29 +91,31 @@ export function SummaryPage() {
   const navigate = useNavigate();
 
   // Stores
-  const startingBalance   = useUserInputsStore((s) => s.startingBalance);
-  const incomes           = useUserInputsStore((s) => s.incomes);
+  const startingBalance = useUserInputsStore((s) => s.startingBalance);
+  const incomes = useUserInputsStore((s) => s.incomes);
   const recurringExpenses = useUserInputsStore((s) => s.recurringExpenses);
-  const resetInputs       = useUserInputsStore((s) => s.reset);
+  const resetInputs = useUserInputsStore((s) => s.reset);
 
-  const amounts        = useAllocationStore((s) => s.amounts);
-  const rateOverrides  = useAllocationStore((s) => s.rateOverrides);
-  const customCfg      = useAllocationStore((s) => s.custom);
-  const timelines      = useAllocationStore((s) => s.timelines);
+  const amounts = useAllocationStore((s) => s.amounts);
+  const rateOverrides = useAllocationStore((s) => s.rateOverrides);
+  const customCfg = useAllocationStore((s) => s.custom);
+  const timelines = useAllocationStore((s) => s.timelines);
   const resetAllocation = useAllocationStore((s) => s.reset);
 
-  const monthlyIncome   = sumMonthly(incomes);
+  const monthlyIncome = sumMonthly(incomes);
   const monthlyExpenses = sumMonthly(recurringExpenses);
-  const monthlySavings  = monthlyIncome - monthlyExpenses;
+  const monthlySavings = monthlyIncome - monthlyExpenses;
 
-  const allocatedStandard = (
-    Object.entries(amounts) as [StandardProductId, number][]
-  ).filter(([, amount]) => amount > 0);
+  const allocatedStandard = useMemo(
+    () => getAllocatedStandardProducts(amounts),
+    [amounts],
+  );
   const hasCustom = customCfg.amount > 0;
 
   // ---------- Pie data ----------
   const pieData = useMemo(() => {
-    const items: { id: string; name: string; amount: number; color: string }[] = [];
+    const items: { id: string; name: string; amount: number; color: string }[] =
+      [];
     allocatedStandard.forEach(([id, amount]) => {
       items.push({
         id,
@@ -141,31 +139,15 @@ export function SummaryPage() {
 
   // ---------- 1-year projection (fixed horizon) ----------
   const oneYearResult = useMemo(() => {
-    const productInputs: ProductProjectionInput[] = [];
-    for (const [id, amount] of allocatedStandard) {
-      if (amount <= 0) continue;
-      const product = PRODUCTS[id];
-      const rate = rateOverrides[id] ?? getDefaultRate(product);
-      const timeline = timelines[id];
-      productInputs.push({
-        id,
-        amount,
-        annualRate: rate,
-        startDate: timeline?.startDate ?? TODAY,
-        endDate: timeline?.endDate,
-      });
-    }
-    if (hasCustom) {
-      const timeline = timelines['custom'];
-      productInputs.push({
-        id: 'custom',
-        amount: customCfg.amount,
-        annualRate: customCfg.annualRate,
-        startDate: timeline?.startDate ?? TODAY,
-        endDate: timeline?.endDate,
-      });
-    }
-    const total = productInputs.reduce((s, p) => s + p.amount, 0);
+    const productInputs = buildProjectionProducts({
+      allocatedStandard,
+      custom: customCfg,
+      hasCustom,
+      rateOverrides,
+      timelines,
+      today: TODAY,
+    });
+    const total = sumProductAmounts(productInputs);
     return computeProjection({
       startingBalance: startingBalance > 0 ? startingBalance : 10000,
       monthlySavings,
@@ -174,12 +156,21 @@ export function SummaryPage() {
       horizonMonths: 12,
       today: TODAY,
     });
-  }, [amounts, rateOverrides, customCfg, timelines, startingBalance, monthlySavings]);
+  }, [
+    allocatedStandard,
+    customCfg,
+    hasCustom,
+    rateOverrides,
+    timelines,
+    startingBalance,
+    monthlySavings,
+  ]);
 
   const gainPct =
     oneYearResult.finalNoInvestment > 0
       ? (
-          ((oneYearResult.finalWithInvestment - oneYearResult.finalNoInvestment) /
+          ((oneYearResult.finalWithInvestment -
+            oneYearResult.finalNoInvestment) /
             oneYearResult.finalNoInvestment) *
           100
         ).toFixed(1)
@@ -204,10 +195,8 @@ export function SummaryPage() {
 
       <div className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
         <div className="space-y-5">
-
           {/* ====== TOP ROW: situation + pie chart ====== */}
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-5">
-
             {/* Situation — 2/5 */}
             <Card className="lg:col-span-2">
               <CardHeader>
@@ -256,7 +245,11 @@ export function SummaryPage() {
                           paddingAngle={2}
                         >
                           {pieData.map((entry) => (
-                            <Cell key={entry.id} fill={entry.color} stroke="none" />
+                            <Cell
+                              key={entry.id}
+                              fill={entry.color}
+                              stroke="none"
+                            />
                           ))}
                         </Pie>
                         <Tooltip
@@ -288,7 +281,10 @@ export function SummaryPage() {
                     {/* Custom legend */}
                     <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1.5">
                       {pieData.map((item) => (
-                        <div key={item.id} className="flex items-center gap-1.5">
+                        <div
+                          key={item.id}
+                          className="flex items-center gap-1.5"
+                        >
                           <span
                             className="inline-block h-2 w-2 flex-shrink-0 rounded-full"
                             style={{ backgroundColor: item.color }}
@@ -298,7 +294,9 @@ export function SummaryPage() {
                           </span>
                           <span className="text-xs font-medium tabular-nums text-foreground">
                             {totalAllocated > 0
-                              ? ((item.amount / totalAllocated) * 100).toFixed(0)
+                              ? ((item.amount / totalAllocated) * 100).toFixed(
+                                  0,
+                                )
                               : 0}{' '}
                             %
                           </span>
@@ -330,13 +328,13 @@ export function SummaryPage() {
                     return (
                       <div
                         key={id}
-                        className="flex items-center justify-between py-2.5"
+                        className="flex flex-col gap-2 py-2.5 sm:flex-row sm:items-center sm:justify-between"
                       >
-                        <div className="flex items-center gap-2">
+                        <div className="flex min-w-0 flex-wrap items-center gap-2">
                           <span
                             className="inline-block h-2.5 w-2.5 flex-shrink-0 rounded-full"
                             style={{
-                              backgroundColor: PIE_COLORS[i % PIE_COLORS.length],
+                              backgroundColor: pieColorAt(i),
                             }}
                           />
                           <span className="text-sm text-foreground">
@@ -346,7 +344,7 @@ export function SummaryPage() {
                             {(rate * 100).toFixed(2).replace(/\.?0+$/, '')} %
                           </span>
                         </div>
-                        <div className="flex items-center gap-4 text-right">
+                        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-left sm:justify-end sm:text-right">
                           {timeline && (
                             <span className="text-xs text-muted-foreground2">
                               {timeline.startDate}
@@ -362,15 +360,14 @@ export function SummaryPage() {
                   })}
 
                   {hasCustom && (
-                    <div className="flex items-center justify-between py-2.5">
-                      <div className="flex items-center gap-2">
+                    <div className="flex flex-col gap-2 py-2.5 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="flex min-w-0 flex-wrap items-center gap-2">
                         <span
                           className="inline-block h-2.5 w-2.5 flex-shrink-0 rounded-full"
                           style={{
-                            backgroundColor:
-                              PIE_COLORS[
-                                allocatedStandard.length % PIE_COLORS.length
-                              ],
+                            backgroundColor: pieColorAt(
+                              allocatedStandard.length,
+                            ),
                           }}
                         />
                         <span className="text-sm text-foreground">
@@ -383,7 +380,7 @@ export function SummaryPage() {
                           %
                         </span>
                       </div>
-                      <div className="flex items-center gap-4 text-right">
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-left sm:justify-end sm:text-right">
                         {timelines['custom'] && (
                           <span className="text-xs text-muted-foreground2">
                             {timelines['custom'].startDate}
@@ -412,16 +409,25 @@ export function SummaryPage() {
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                 <KpiBox
                   label={t('summary.projection.with')}
-                  value={formatCurrency(oneYearResult.finalWithInvestment, language)}
+                  value={formatCurrency(
+                    oneYearResult.finalWithInvestment,
+                    language,
+                  )}
                   highlight
                 />
                 <KpiBox
                   label={t('summary.projection.without')}
-                  value={formatCurrency(oneYearResult.finalNoInvestment, language)}
+                  value={formatCurrency(
+                    oneYearResult.finalNoInvestment,
+                    language,
+                  )}
                 />
                 <KpiBox
                   label={t('summary.projection.interest')}
-                  value={formatCurrency(oneYearResult.totalInterestEarned, language)}
+                  value={formatCurrency(
+                    oneYearResult.totalInterestEarned,
+                    language,
+                  )}
                   highlight
                 />
                 <KpiBox
@@ -432,7 +438,6 @@ export function SummaryPage() {
               </div>
             </CardContent>
           </Card>
-
         </div>
 
         {/* ====== NAV ====== */}

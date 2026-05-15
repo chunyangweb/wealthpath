@@ -289,7 +289,8 @@
   "common": {
     "comingSoon": "Coming soon",
     "back": "Back",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "skip_to_content": "Skip to content"
   },
   "footer": {
     "disclaimer": "For informational purposes only. Does not constitute investment advice within the meaning of article L321-1 of the French Monetary and Financial Code.",

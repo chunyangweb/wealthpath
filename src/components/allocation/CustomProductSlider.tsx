@@ -1,5 +1,8 @@
 import { useTranslation } from 'react-i18next';
-import type { CustomProductConfig, ProductTimeline } from '@/state/allocationStore';
+import type {
+  CustomProductConfig,
+  ProductTimeline,
+} from '@/state/allocationStore';
 import { useSettingsStore } from '@/state/settingsStore';
 import { formatCurrency } from '@/lib/utils/formatCurrency';
 import { Label, Input, NumberInput, Select } from '@/components/ui/Input';
@@ -17,9 +20,25 @@ type Props = {
  * Different layout from regular sliders: it has editable name, rate, and pool fields.
  * Tinted background so the user knows this product is user-defined.
  */
-export function CustomProductSlider({ custom, sliderMax, timeline, onChange, onTimelineChange }: Props) {
+export function CustomProductSlider({
+  custom,
+  sliderMax,
+  timeline,
+  onChange,
+  onTimelineChange,
+}: Props) {
   const { t } = useTranslation();
   const language = useSettingsStore((s) => s.language);
+  const startDateId = 'custom-product-start-date';
+  const endDateId = 'custom-product-end-date';
+
+  function handleStartDateChange(startDate: string) {
+    const endDate =
+      timeline.endDate && timeline.endDate < startDate
+        ? undefined
+        : timeline.endDate;
+    onTimelineChange({ ...timeline, startDate, endDate });
+  }
 
   return (
     <div className="border-b border-border bg-background-soft/60 px-4 py-4 last:border-b-0">
@@ -36,7 +55,7 @@ export function CustomProductSlider({ custom, sliderMax, timeline, onChange, onT
       {/* Editable fields */}
       <div className="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
         <div>
-          <Label htmlFor="custom-name">
+          <Label htmlFor="custom-name" className="sm:min-h-8">
             {t('allocation.custom.name_label')}
           </Label>
           <Input
@@ -48,7 +67,7 @@ export function CustomProductSlider({ custom, sliderMax, timeline, onChange, onT
           />
         </div>
         <div>
-          <Label htmlFor="custom-rate">
+          <Label htmlFor="custom-rate" className="sm:min-h-8">
             {t('allocation.custom.rate_label')}
           </Label>
           <NumberInput
@@ -60,7 +79,7 @@ export function CustomProductSlider({ custom, sliderMax, timeline, onChange, onT
           />
         </div>
         <div>
-          <Label htmlFor="custom-pool">
+          <Label htmlFor="custom-pool" className="sm:min-h-8">
             {t('allocation.custom.lockin_label')}
           </Label>
           <Select
@@ -96,26 +115,26 @@ export function CustomProductSlider({ custom, sliderMax, timeline, onChange, onT
       </p>
 
       {/* Timeline inputs */}
-      <div className="mt-3 grid grid-cols-2 gap-3">
+      <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
-          <label className="mb-1 block text-xs text-muted-foreground">
+          <Label htmlFor={startDateId} className="mb-1">
             {t('allocation.timeline.start_date')}
-          </label>
+          </Label>
           <input
+            id={startDateId}
             type="date"
             value={timeline.startDate}
-            onChange={(e) =>
-              onTimelineChange({ ...timeline, startDate: e.target.value })
-            }
+            onChange={(e) => handleStartDateChange(e.target.value)}
             className="w-full rounded-md border border-border bg-background px-2 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
             required
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs text-muted-foreground">
+          <Label htmlFor={endDateId} className="mb-1">
             {t('allocation.timeline.end_date_optional')}
-          </label>
+          </Label>
           <input
+            id={endDateId}
             type="date"
             value={timeline.endDate ?? ''}
             min={timeline.startDate}

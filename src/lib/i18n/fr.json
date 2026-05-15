@@ -289,7 +289,8 @@
   "common": {
     "comingSoon": "Bientôt disponible",
     "back": "Retour",
-    "cancel": "Annuler"
+    "cancel": "Annuler",
+    "skip_to_content": "Aller au contenu"
   },
   "footer": {
     "disclaimer": "Simulation à but informatif uniquement. Ne constitue pas un conseil en investissement au sens de l'article L321-1 du Code monétaire et financier.",

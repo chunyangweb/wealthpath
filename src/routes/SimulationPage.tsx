@@ -15,13 +15,19 @@ import {
 import { Button } from '@/components/ui/Button';
 
 import { PRODUCTS, getDefaultRate } from '@/data/products.fr';
-import { useAllocationStore, type StandardProductId } from '@/state/allocationStore';
+import { useAllocationStore } from '@/state/allocationStore';
 import { useUserInputsStore } from '@/state/userInputsStore';
 import { useSettingsStore } from '@/state/settingsStore';
 import { formatCurrency } from '@/lib/utils/formatCurrency';
 import { PoolDot } from '@/components/allocation/PoolDot';
-import { computeProjection, type ProductProjectionInput } from '@/lib/finance/projection';
-import { computeLiquidity, type LiquidityProductInput } from '@/lib/finance/liquidity';
+import { computeProjection } from '@/lib/finance/projection';
+import { computeLiquidity } from '@/lib/finance/liquidity';
+import {
+  buildLiquidityProducts,
+  buildProjectionProducts,
+  getAllocatedStandardProducts,
+  sumProductAmounts,
+} from '@/lib/finance/allocationInputs';
 import { ProjectionChart } from '@/components/simulation/ProjectionChart';
 import { LiquidityChart } from '@/components/simulation/LiquidityChart';
 import { sumMonthly } from '@/lib/utils/frequencyToMonthly';
@@ -47,41 +53,23 @@ export function SimulationPage() {
   const monthlySavings = sumMonthly(incomes) - sumMonthly(recurringExpenses);
 
   // Collect allocated products for summary display
-  const allocatedStandard = (
-    Object.entries(amounts) as [StandardProductId, number][]
-  ).filter(([, amount]) => amount > 0);
+  const allocatedStandard = useMemo(
+    () => getAllocatedStandardProducts(amounts),
+    [amounts],
+  );
   const hasCustom = customCfg.amount > 0;
 
   // Build projection inputs
   const projectionResult = useMemo(() => {
-    const productInputs: ProductProjectionInput[] = [];
-
-    for (const [id, amount] of allocatedStandard) {
-      if (amount <= 0) continue;
-      const product = PRODUCTS[id];
-      const rate = rateOverrides[id] ?? getDefaultRate(product);
-      const timeline = timelines[id];
-      productInputs.push({
-        id,
-        amount,
-        annualRate: rate,
-        startDate: timeline?.startDate ?? TODAY,
-        endDate: timeline?.endDate,
-      });
-    }
-
-    if (hasCustom) {
-      const timeline = timelines['custom'];
-      productInputs.push({
-        id: 'custom',
-        amount: customCfg.amount,
-        annualRate: customCfg.annualRate,
-        startDate: timeline?.startDate ?? TODAY,
-        endDate: timeline?.endDate,
-      });
-    }
-
-    const totalAllocated = productInputs.reduce((s, p) => s + p.amount, 0);
+    const productInputs = buildProjectionProducts({
+      allocatedStandard,
+      custom: customCfg,
+      hasCustom,
+      rateOverrides,
+      timelines,
+      today: TODAY,
+    });
+    const totalAllocated = sumProductAmounts(productInputs);
 
     return computeProjection({
       startingBalance: startingBalance > 0 ? startingBalance : 10000,
@@ -92,50 +80,27 @@ export function SimulationPage() {
       today: TODAY,
     });
   }, [
-    amounts,
     rateOverrides,
     customCfg,
     timelines,
     startingBalance,
     monthlySavings,
     horizonYears,
-    // allocatedStandard and hasCustom are derived, no need to list separately
+    allocatedStandard,
+    hasCustom,
   ]);
 
   // Build liquidity inputs (same products, adds pool + lockIn for classification)
   const liquidityResult = useMemo(() => {
-    const productInputs: LiquidityProductInput[] = [];
-
-    for (const [id, amount] of allocatedStandard) {
-      if (amount <= 0) continue;
-      const product = PRODUCTS[id];
-      const rate = rateOverrides[id] ?? getDefaultRate(product);
-      const timeline = timelines[id];
-      productInputs.push({
-        id,
-        amount,
-        annualRate: rate,
-        startDate: timeline?.startDate ?? TODAY,
-        endDate: timeline?.endDate,
-        pool: product.pool,
-        lockIn: product.lockIn,
-      });
-    }
-
-    if (hasCustom) {
-      const timeline = timelines['custom'];
-      productInputs.push({
-        id: 'custom',
-        amount: customCfg.amount,
-        annualRate: customCfg.annualRate,
-        startDate: timeline?.startDate ?? TODAY,
-        endDate: timeline?.endDate,
-        pool: customCfg.pool,
-        lockIn: { kind: 'none' },
-      });
-    }
-
-    const totalAllocated = productInputs.reduce((s, p) => s + p.amount, 0);
+    const productInputs = buildLiquidityProducts({
+      allocatedStandard,
+      custom: customCfg,
+      hasCustom,
+      rateOverrides,
+      timelines,
+      today: TODAY,
+    });
+    const totalAllocated = sumProductAmounts(productInputs);
 
     return computeLiquidity({
       startingBalance: startingBalance > 0 ? startingBalance : 10000,
@@ -146,13 +111,14 @@ export function SimulationPage() {
       today: TODAY,
     });
   }, [
-    amounts,
     rateOverrides,
     customCfg,
     timelines,
     startingBalance,
     monthlySavings,
     horizonYears,
+    allocatedStandard,
+    hasCustom,
   ]);
 
   return (
@@ -192,9 +158,9 @@ export function SimulationPage() {
                     return (
                       <div
                         key={id}
-                        className="flex items-center justify-between py-2.5"
+                        className="flex flex-col gap-2 py-2.5 sm:flex-row sm:items-center sm:justify-between"
                       >
-                        <div className="flex items-center gap-2">
+                        <div className="flex min-w-0 flex-wrap items-center gap-2">
                           <PoolDot pool={product.pool} />
                           <span className="text-sm text-foreground">
                             {t(`allocation.products.${id}.name`)}
@@ -203,7 +169,7 @@ export function SimulationPage() {
                             {(rate * 100).toFixed(2).replace(/\.?0+$/, '')} %
                           </span>
                         </div>
-                        <div className="flex items-center gap-4 text-right">
+                        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-left sm:justify-end sm:text-right">
                           {timeline && (
                             <span className="text-xs text-muted-foreground2">
                               {timeline.startDate}
@@ -219,17 +185,20 @@ export function SimulationPage() {
                   })}
 
                   {hasCustom && (
-                    <div className="flex items-center justify-between py-2.5">
-                      <div className="flex items-center gap-2">
+                    <div className="flex flex-col gap-2 py-2.5 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="flex min-w-0 flex-wrap items-center gap-2">
                         <PoolDot pool={customCfg.pool} />
                         <span className="text-sm text-foreground">
                           {customCfg.name || t('allocation.custom.title')}
                         </span>
                         <span className="rounded bg-secondary px-1.5 py-0.5 text-xs tabular-nums text-secondary-foreground">
-                          {(customCfg.annualRate * 100).toFixed(2).replace(/\.?0+$/, '')} %
+                          {(customCfg.annualRate * 100)
+                            .toFixed(2)
+                            .replace(/\.?0+$/, '')}{' '}
+                          %
                         </span>
                       </div>
-                      <div className="flex items-center gap-4 text-right">
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-left sm:justify-end sm:text-right">
                         {timelines['custom'] && (
                           <span className="text-xs text-muted-foreground2">
                             {timelines['custom'].startDate}
@@ -261,6 +230,7 @@ export function SimulationPage() {
                   <button
                     key={years}
                     type="button"
+                    aria-pressed={horizonYears === years}
                     onClick={() => setHorizonYears(years)}
                     className={`rounded-md px-4 py-2 text-sm transition-colors ${
                       horizonYears === years

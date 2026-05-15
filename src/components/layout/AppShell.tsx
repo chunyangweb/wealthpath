@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { SiteFooter } from './SiteFooter';
@@ -18,6 +19,7 @@ import { SiteFooter } from './SiteFooter';
 export function AppShell() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const { t } = useTranslation();
 
   // Close the mobile sidebar whenever the route changes
   useEffect(() => {
@@ -30,6 +32,13 @@ export function AppShell() {
   // Same component handles both via the `isMobile` prop.
   return (
     <div className="flex min-h-screen">
+      <a
+        href="#main-content"
+        className="sr-only fixed left-3 top-3 z-50 rounded-md bg-card px-3 py-2 text-sm font-medium text-foreground shadow focus:not-sr-only focus:outline-none focus:ring-2 focus:ring-ring"
+      >
+        {t('common.skip_to_content')}
+      </a>
+
       {/* Desktop sidebar — part of the layout */}
       <Sidebar isMobile={false} open={false} onClose={() => undefined} />
 
@@ -42,7 +51,9 @@ export function AppShell() {
 
       {/* Main content area */}
       <div className="flex min-w-0 flex-1 flex-col">
-        <Outlet context={{ onMenuClick: () => setMobileOpen(true) }} />
+        <main id="main-content" className="min-w-0 flex-1">
+          <Outlet context={{ onMenuClick: () => setMobileOpen(true) }} />
+        </main>
         <SiteFooter />
       </div>
     </div>

@@ -11,13 +11,10 @@ type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const VARIANT_CLASSES: Record<Variant, string> = {
   primary: 'bg-primary text-primary-foreground hover:bg-primary/90',
-  secondary:
-    'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+  secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
   ghost: 'text-foreground hover:bg-muted',
-  outline:
-    'border border-border bg-card text-foreground hover:bg-muted',
-  destructive:
-    'text-destructive hover:bg-destructive/10',
+  outline: 'border border-border bg-card text-foreground hover:bg-muted',
+  destructive: 'text-destructive hover:bg-destructive/10',
 };
 
 const SIZE_CLASSES: Record<Size, string> = {
@@ -27,9 +24,13 @@ const SIZE_CLASSES: Record<Size, string> = {
 };
 
 export const Button = forwardRef<HTMLButtonElement, Props>(
-  ({ className, variant = 'primary', size = 'md', ...props }, ref) => (
+  (
+    { className, type = 'button', variant = 'primary', size = 'md', ...props },
+    ref,
+  ) => (
     <button
       ref={ref}
+      type={type}
       className={cn(
         'inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1',
