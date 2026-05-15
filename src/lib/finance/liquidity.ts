@@ -55,8 +55,18 @@ export type LiquidityResult = {
 // ---------- Helpers (mirrors projection.ts) ----------
 
 function parseYMD(s: string): Date {
-  const [y, m, d] = s.split('-').map(Number);
-  return new Date(y, m - 1, d);
+  const [year, month, day] = s.split('-').map(Number);
+  if (
+    year === undefined ||
+    month === undefined ||
+    day === undefined ||
+    !Number.isFinite(year) ||
+    !Number.isFinite(month) ||
+    !Number.isFinite(day)
+  ) {
+    throw new Error(`Invalid date: ${s}`);
+  }
+  return new Date(year, month - 1, day);
 }
 
 function monthsBetween(a: Date, b: Date): number {
@@ -77,12 +87,12 @@ function formatLabel(date: Date, monthIndex: number, horizonMonths: number): str
     horizonMonths <= 24 ? 4 :
     horizonMonths <= 36 ? 6 : 12;
   if (monthIndex % step !== 0) return '';
-  return `${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`;
+  return `${MONTH_NAMES[date.getMonth()] ?? ''} ${date.getFullYear()}`;
 }
 
 function formatTooltipLabel(date: Date, monthIndex: number): string {
   if (monthIndex === 0) return 'Now';
-  return `${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`;
+  return `${MONTH_NAMES[date.getMonth()] ?? ''} ${date.getFullYear()}`;
 }
 
 /**
@@ -152,6 +162,15 @@ export function computeLiquidity(input: LiquidityInput): LiquidityResult {
   }
 
   const last = points[points.length - 1];
+  if (!last) {
+    return {
+      points,
+      finalLiquid: 0,
+      finalSemiLiquid: 0,
+      finalLocked: 0,
+    };
+  }
+
   return {
     points,
     finalLiquid: last.liquid,

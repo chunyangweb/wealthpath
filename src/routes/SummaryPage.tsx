@@ -30,9 +30,11 @@ import { computeProjection, type ProductProjectionInput } from '@/lib/finance/pr
 
 const TODAY = new Date().toISOString().slice(0, 10);
 
+const DEFAULT_PIE_COLOR = 'hsl(92, 33%, 31%)';
+
 // 12 shades across the sage-green / olive palette (excluding the darkest)
 const PIE_COLORS = [
-  'hsl(92, 33%, 31%)',
+  DEFAULT_PIE_COLOR,
   'hsl(83, 28%, 49%)',
   'hsl(76, 34%, 67%)',
   'hsl(87, 22%, 40%)',
@@ -45,6 +47,10 @@ const PIE_COLORS = [
   'hsl(100, 20%, 44%)',
   'hsl(72, 28%, 80%)',
 ];
+
+function pieColorAt(index: number): string {
+  return PIE_COLORS[index % PIE_COLORS.length] ?? DEFAULT_PIE_COLOR;
+}
 
 // ---------- Sub-components ----------
 
@@ -117,7 +123,7 @@ export function SummaryPage() {
         id,
         name: t(`allocation.products.${id}.name`),
         amount,
-        color: PIE_COLORS[items.length % PIE_COLORS.length],
+        color: pieColorAt(items.length),
       });
     });
     if (hasCustom) {
@@ -125,7 +131,7 @@ export function SummaryPage() {
         id: 'custom',
         name: customCfg.name || t('allocation.custom.title'),
         amount: customCfg.amount,
-        color: PIE_COLORS[items.length % PIE_COLORS.length],
+        color: pieColorAt(items.length),
       });
     }
     return items;

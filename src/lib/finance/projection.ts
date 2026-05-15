@@ -54,8 +54,18 @@ export type ProjectionResult = {
 // ---------- Helpers ----------
 
 function parseYMD(s: string): Date {
-  const [y, m, d] = s.split('-').map(Number);
-  return new Date(y, m - 1, d);
+  const [year, month, day] = s.split('-').map(Number);
+  if (
+    year === undefined ||
+    month === undefined ||
+    day === undefined ||
+    !Number.isFinite(year) ||
+    !Number.isFinite(month) ||
+    !Number.isFinite(day)
+  ) {
+    throw new Error(`Invalid date: ${s}`);
+  }
+  return new Date(year, month - 1, day);
 }
 
 /** Integer month count between two dates (ignores day-of-month). */
@@ -83,12 +93,12 @@ function formatLabel(date: Date, monthIndex: number, horizonMonths: number): str
 
   if (monthIndex % step !== 0) return '';
 
-  return `${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`;
+  return `${MONTH_NAMES[date.getMonth()] ?? ''} ${date.getFullYear()}`;
 }
 
 function formatTooltipLabel(date: Date, monthIndex: number): string {
   if (monthIndex === 0) return 'Now';
-  return `${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`;
+  return `${MONTH_NAMES[date.getMonth()] ?? ''} ${date.getFullYear()}`;
 }
 
 // ---------- Core calculation ----------
@@ -102,7 +112,6 @@ function formatTooltipLabel(date: Date, monthIndex: number): string {
 function productValueAt(
   p: ProductProjectionInput,
   currentDate: Date,
-  today: Date,
 ): { activeValue: number; cashValue: number } {
   const startDate = parseYMD(p.startDate);
 
@@ -156,7 +165,7 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
     let returnedToCash = 0;
 
     for (const p of products) {
-      const { activeValue, cashValue } = productValueAt(p, currentDate, todayDate);
+      const { activeValue, cashValue } = productValueAt(p, currentDate);
       productTotal += activeValue;
       returnedToCash += cashValue;
     }
@@ -174,6 +183,15 @@ export function computeProjection(input: ProjectionInput): ProjectionResult {
   }
 
   const last = points[points.length - 1];
+  if (!last) {
+    return {
+      points,
+      finalNoInvestment: 0,
+      finalWithInvestment: 0,
+      totalInterestEarned: 0,
+    };
+  }
+
   return {
     points,
     finalNoInvestment: last.noInvestment,
