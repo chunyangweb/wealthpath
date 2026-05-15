@@ -13,22 +13,21 @@ import {
 import type { ProjectionPoint } from '@/lib/finance/projection';
 import { useSettingsStore } from '@/state/settingsStore';
 import { formatCurrency } from '@/lib/utils/formatCurrency';
-import { useMediaQuery } from '@/lib/utils/useMediaQuery';
 
 // Palette position 6 (medium-dark sage) for the "with investment" line;
 // position 2 (very light olive) for the muted "without" baseline.
-const COLOR_WITH = 'hsl(87, 31%, 39%)'; // #728545
-const COLOR_WITH_FILL = 'hsl(83, 28%, 68%)'; // lighter sage fill
-const COLOR_WITHOUT = 'hsl(70, 25%, 73%)'; // pale olive — clearly subordinate
+const COLOR_WITH      = 'hsl(87, 31%, 39%)';   // #728545
+const COLOR_WITH_FILL = 'hsl(83, 28%, 68%)';   // lighter sage fill
+const COLOR_WITHOUT   = 'hsl(70, 25%, 73%)';   // pale olive — clearly subordinate
 
 type KpiCardProps = { label: string; value: string; highlight?: boolean };
 
 function KpiCard({ label, value, highlight }: KpiCardProps) {
   return (
-    <div className="min-w-0 rounded-lg border border-border bg-card px-3 py-3 sm:px-4">
+    <div className="rounded-lg border border-border bg-card px-4 py-3">
       <p className="text-xs text-muted-foreground">{label}</p>
       <p
-        className={`mt-1 break-words text-base font-semibold tabular-nums sm:text-lg ${
+        className={`mt-1 text-lg font-semibold tabular-nums ${
           highlight ? 'text-primary' : 'text-foreground'
         }`}
       >
@@ -55,7 +54,6 @@ export function ProjectionChart({
 }: Props) {
   const { t } = useTranslation();
   const language = useSettingsStore((s) => s.language);
-  const isCompact = useMediaQuery('(max-width: 640px)');
 
   // Include enough points for smooth tooltip hovering at the right granularity:
   // ≤2 years → every month, 3 years → every quarter, 5-10 years → every 6 months.
@@ -82,16 +80,12 @@ export function ProjectionChart({
     ];
   }, [chartData]);
 
-  const yFormatter = (v: number) =>
-    formatCurrency(v, language, { compact: true });
+  const yFormatter = (v: number) => formatCurrency(v, language, { compact: true });
   const tooltipFormatter = (v: number) => formatCurrency(v, language);
 
   const gainPct =
     finalNoInvestment > 0
-      ? (
-          ((finalWithInvestment - finalNoInvestment) / finalNoInvestment) *
-          100
-        ).toFixed(1)
+      ? (((finalWithInvestment - finalNoInvestment) / finalNoInvestment) * 100).toFixed(1)
       : '0';
 
   return (
@@ -104,9 +98,7 @@ export function ProjectionChart({
           highlight
         />
         <KpiCard
-          label={t('simulation.projection.kpi_without', {
-            years: horizonYears,
-          })}
+          label={t('simulation.projection.kpi_without', { years: horizonYears })}
           value={formatCurrency(finalNoInvestment, language)}
         />
         <KpiCard
@@ -122,23 +114,15 @@ export function ProjectionChart({
       </div>
 
       {/* Chart */}
-      <ResponsiveContainer width="100%" height={isCompact ? 250 : 320}>
+      <ResponsiveContainer width="100%" height={320}>
         <AreaChart
           data={chartData}
-          margin={
-            isCompact
-              ? { top: 8, right: 0, bottom: 0, left: -10 }
-              : { top: 8, right: 8, bottom: 0, left: 8 }
-          }
+          margin={{ top: 8, right: 8, bottom: 0, left: 8 }}
         >
           <defs>
             <linearGradient id="gradWith" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor={COLOR_WITH_FILL} stopOpacity={0.8} />
-              <stop
-                offset="95%"
-                stopColor={COLOR_WITH_FILL}
-                stopOpacity={0.1}
-              />
+              <stop offset="95%" stopColor={COLOR_WITH_FILL} stopOpacity={0.1} />
             </linearGradient>
             <linearGradient id="gradWithout" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor={COLOR_WITHOUT} stopOpacity={0.25} />
@@ -150,25 +134,18 @@ export function ProjectionChart({
 
           <XAxis
             dataKey="label"
-            tick={{
-              fontSize: isCompact ? 10 : 11,
-              fill: 'hsl(105, 6%, 57%)',
-            }}
+            tick={{ fontSize: 11, fill: 'hsl(105, 6%, 57%)' }}
             tickLine={false}
             axisLine={false}
-            minTickGap={isCompact ? 20 : 5}
           />
 
           <YAxis
             domain={yDomain}
             tickFormatter={yFormatter}
-            tick={{
-              fontSize: isCompact ? 10 : 11,
-              fill: 'hsl(105, 6%, 57%)',
-            }}
+            tick={{ fontSize: 11, fill: 'hsl(105, 6%, 57%)' }}
             tickLine={false}
             axisLine={false}
-            width={isCompact ? 50 : 72}
+            width={72}
           />
 
           <Tooltip
@@ -179,8 +156,7 @@ export function ProjectionChart({
                 : t('simulation.projection.series_without'),
             ]}
             labelFormatter={(_, payload) =>
-              (payload as { payload: { tooltipLabel: string } }[])?.[0]?.payload
-                ?.tooltipLabel ?? ''
+              (payload as { payload: { tooltipLabel: string } }[])?.[0]?.payload?.tooltipLabel ?? ''
             }
             labelStyle={{ fontWeight: 600, color: 'hsl(120, 12%, 20%)' }}
             contentStyle={{
@@ -198,10 +174,7 @@ export function ProjectionChart({
             }
             iconType="circle"
             iconSize={8}
-            wrapperStyle={{
-              fontSize: isCompact ? '0.75rem' : '0.8125rem',
-              paddingTop: '8px',
-            }}
+            wrapperStyle={{ fontSize: '0.8125rem', paddingTop: '8px' }}
           />
 
           {/* "Without investment" area — rendered first (behind) */}
