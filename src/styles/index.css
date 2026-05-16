@@ -5,9 +5,9 @@
 @layer base {
   :root {
     /* Creamy green palette — approved in mockup */
-    --background: 75 32% 95%;            /* #f4f7ee cream page bg */
-    --background-soft: 78 38% 92%;       /* #eef3e3 slightly darker cream */
-    --foreground: 120 12% 20%;           /* #2d3a2d near-black with green tint */
+    --background: 75 32% 95%; /* #f4f7ee cream page bg */
+    --background-soft: 78 38% 92%; /* #eef3e3 slightly darker cream */
+    --foreground: 120 12% 20%; /* #2d3a2d near-black with green tint */
 
     --card: 0 0% 100%;
     --card-foreground: 120 12% 20%;
@@ -15,15 +15,15 @@
     --popover: 0 0% 100%;
     --popover-foreground: 120 12% 20%;
 
-    --primary: 120 19% 45%;              /* #5d8a5d sage-deep — buttons, active state */
+    --primary: 120 19% 45%; /* #5d8a5d sage-deep — buttons, active state */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 88 33% 84%;             /* #e7efde very light sage — highlights */
+    --secondary: 88 33% 84%; /* #e7efde very light sage — highlights */
     --secondary-foreground: 120 19% 35%;
 
-    --muted: 76 38% 92%;                 /* cream */
-    --muted-foreground: 105 6% 42%;      /* #5c6b5c ink-soft */
-    --muted-foreground-2: 105 6% 57%;    /* #8a978a ink-mute */
+    --muted: 76 38% 92%; /* cream */
+    --muted-foreground: 105 6% 42%; /* #5c6b5c ink-soft */
+    --muted-foreground-2: 105 6% 57%; /* #8a978a ink-mute */
 
     --accent: 88 33% 84%;
     --accent-foreground: 120 19% 35%;
@@ -31,18 +31,18 @@
     --destructive: 0 60% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --warning: 38 75% 88%;               /* #fef6e4 warning bg */
-    --warning-border: 38 75% 76%;        /* #f5d491 warning border */
-    --warning-foreground: 38 75% 31%;    /* #8a6914 warning text */
+    --warning: 38 75% 88%; /* #fef6e4 warning bg */
+    --warning-border: 38 75% 76%; /* #f5d491 warning border */
+    --warning-foreground: 38 75% 31%; /* #8a6914 warning text */
 
-    --border: 75 24% 89%;                /* #e4eadb soft borders */
+    --border: 75 24% 89%; /* #e4eadb soft borders */
     --input: 75 24% 89%;
     --ring: 120 19% 45%;
 
     /* Liquidity pool colors */
-    --pool-liquid: 120 23% 59%;          /* #7faf7f */
-    --pool-semi: 41 53% 62%;             /* #d4b266 */
-    --pool-locked: 120 6% 51%;           /* #9ba99b */
+    --pool-liquid: 120 23% 59%; /* #7faf7f */
+    --pool-semi: 41 53% 62%; /* #d4b266 */
+    --pool-locked: 120 6% 51%; /* #9ba99b */
 
     --radius: 0.75rem;
   }
@@ -101,5 +101,34 @@
     border-radius: 50%;
     cursor: pointer;
     border: 2px solid white;
+  }
+
+  /*
+   * iPhone Chrome/Safari render native date controls with a wide intrinsic
+   * layout and centered localized text. Keep this scoped to small WebKit
+   * screens so desktop Chrome/Safari stay visually unchanged.
+   */
+  @supports (-webkit-touch-callout: none) {
+    @media (max-width: 640px) {
+      input[type='date'] {
+        -webkit-appearance: none;
+        appearance: none;
+        display: block;
+        box-sizing: border-box;
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        text-align: left;
+      }
+
+      input[type='date']::-webkit-date-and-time-value {
+        min-width: 0;
+        text-align: left;
+      }
+
+      input[type='date']::-webkit-calendar-picker-indicator {
+        flex-shrink: 0;
+      }
+    }
   }
 }
