@@ -41,7 +41,7 @@ export function CustomProductSlider({
   }
 
   return (
-    <div className="border-b border-border bg-background-soft/60 px-4 py-4 last:border-b-0">
+    <div className="min-w-0 border-b border-border bg-background-soft/60 px-4 py-4 last:border-b-0">
       {/* Header row */}
       <div className="mb-3 flex items-center justify-between gap-2">
         <span className="text-sm font-medium text-foreground">
@@ -53,8 +53,8 @@ export function CustomProductSlider({
       </div>
 
       {/* Editable fields */}
-      <div className="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <div>
+      <div className="mb-3 grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-3">
+        <div className="min-w-0">
           <Label htmlFor="custom-name" className="sm:min-h-8">
             {t('allocation.custom.name_label')}
           </Label>
@@ -66,7 +66,7 @@ export function CustomProductSlider({
             maxLength={80}
           />
         </div>
-        <div>
+        <div className="min-w-0">
           <Label htmlFor="custom-rate" className="sm:min-h-8">
             {t('allocation.custom.rate_label')}
           </Label>
@@ -78,7 +78,7 @@ export function CustomProductSlider({
             max={100}
           />
         </div>
-        <div>
+        <div className="min-w-0">
           <Label htmlFor="custom-pool" className="sm:min-h-8">
             {t('allocation.custom.lockin_label')}
           </Label>
@@ -115,8 +115,8 @@ export function CustomProductSlider({
       </p>
 
       {/* Timeline inputs */}
-      <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <div>
+      <div className="mt-3 grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="min-w-0">
           <Label htmlFor={startDateId} className="mb-1">
             {t('allocation.timeline.start_date')}
           </Label>
@@ -125,11 +125,11 @@ export function CustomProductSlider({
             type="date"
             value={timeline.startDate}
             onChange={(e) => handleStartDateChange(e.target.value)}
-            className="w-full rounded-md border border-border bg-background px-2 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+            className="w-full min-w-0 max-w-full rounded-md border border-border bg-background px-2 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
             required
           />
         </div>
-        <div>
+        <div className="min-w-0">
           <Label htmlFor={endDateId} className="mb-1">
             {t('allocation.timeline.end_date_optional')}
           </Label>
@@ -144,7 +144,7 @@ export function CustomProductSlider({
                 endDate: e.target.value || undefined,
               })
             }
-            className="w-full rounded-md border border-border bg-background px-2 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+            className="w-full min-w-0 max-w-full rounded-md border border-border bg-background px-2 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
           />
         </div>
       </div>

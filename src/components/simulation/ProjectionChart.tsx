@@ -16,9 +16,9 @@ import { formatCurrency } from '@/lib/utils/formatCurrency';
 
 // Palette position 6 (medium-dark sage) for the "with investment" line;
 // position 2 (very light olive) for the muted "without" baseline.
-const COLOR_WITH      = 'hsl(87, 31%, 39%)';   // #728545
-const COLOR_WITH_FILL = 'hsl(83, 28%, 68%)';   // lighter sage fill
-const COLOR_WITHOUT   = 'hsl(70, 25%, 73%)';   // pale olive — clearly subordinate
+const COLOR_WITH = 'hsl(87, 31%, 39%)'; // #728545
+const COLOR_WITH_FILL = 'hsl(83, 28%, 68%)'; // lighter sage fill
+const COLOR_WITHOUT = 'hsl(70, 25%, 73%)'; // pale olive — clearly subordinate
 
 type KpiCardProps = { label: string; value: string; highlight?: boolean };
 
@@ -80,16 +80,20 @@ export function ProjectionChart({
     ];
   }, [chartData]);
 
-  const yFormatter = (v: number) => formatCurrency(v, language, { compact: true });
+  const yFormatter = (v: number) =>
+    formatCurrency(v, language, { compact: true });
   const tooltipFormatter = (v: number) => formatCurrency(v, language);
 
   const gainPct =
     finalNoInvestment > 0
-      ? (((finalWithInvestment - finalNoInvestment) / finalNoInvestment) * 100).toFixed(1)
+      ? (
+          ((finalWithInvestment - finalNoInvestment) / finalNoInvestment) *
+          100
+        ).toFixed(1)
       : '0';
 
   return (
-    <div className="space-y-4">
+    <div className="min-w-0 space-y-4">
       {/* KPI row */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <KpiCard
@@ -98,7 +102,9 @@ export function ProjectionChart({
           highlight
         />
         <KpiCard
-          label={t('simulation.projection.kpi_without', { years: horizonYears })}
+          label={t('simulation.projection.kpi_without', {
+            years: horizonYears,
+          })}
           value={formatCurrency(finalNoInvestment, language)}
         />
         <KpiCard
@@ -114,91 +120,110 @@ export function ProjectionChart({
       </div>
 
       {/* Chart */}
-      <ResponsiveContainer width="100%" height={320}>
-        <AreaChart
-          data={chartData}
-          margin={{ top: 8, right: 8, bottom: 0, left: 8 }}
-        >
-          <defs>
-            <linearGradient id="gradWith" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor={COLOR_WITH_FILL} stopOpacity={0.8} />
-              <stop offset="95%" stopColor={COLOR_WITH_FILL} stopOpacity={0.1} />
-            </linearGradient>
-            <linearGradient id="gradWithout" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor={COLOR_WITHOUT} stopOpacity={0.25} />
-              <stop offset="95%" stopColor={COLOR_WITHOUT} stopOpacity={0.05} />
-            </linearGradient>
-          </defs>
+      <div className="min-w-0">
+        <ResponsiveContainer width="100%" height={320}>
+          <AreaChart
+            data={chartData}
+            margin={{ top: 8, right: 8, bottom: 0, left: 8 }}
+          >
+            <defs>
+              <linearGradient id="gradWith" x1="0" y1="0" x2="0" y2="1">
+                <stop
+                  offset="5%"
+                  stopColor={COLOR_WITH_FILL}
+                  stopOpacity={0.8}
+                />
+                <stop
+                  offset="95%"
+                  stopColor={COLOR_WITH_FILL}
+                  stopOpacity={0.1}
+                />
+              </linearGradient>
+              <linearGradient id="gradWithout" x1="0" y1="0" x2="0" y2="1">
+                <stop
+                  offset="5%"
+                  stopColor={COLOR_WITHOUT}
+                  stopOpacity={0.25}
+                />
+                <stop
+                  offset="95%"
+                  stopColor={COLOR_WITHOUT}
+                  stopOpacity={0.05}
+                />
+              </linearGradient>
+            </defs>
 
-          <CartesianGrid strokeDasharray="3 3" stroke="hsl(75, 24%, 89%)" />
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(75, 24%, 89%)" />
 
-          <XAxis
-            dataKey="label"
-            tick={{ fontSize: 11, fill: 'hsl(105, 6%, 57%)' }}
-            tickLine={false}
-            axisLine={false}
-          />
+            <XAxis
+              dataKey="label"
+              tick={{ fontSize: 11, fill: 'hsl(105, 6%, 57%)' }}
+              tickLine={false}
+              axisLine={false}
+            />
 
-          <YAxis
-            domain={yDomain}
-            tickFormatter={yFormatter}
-            tick={{ fontSize: 11, fill: 'hsl(105, 6%, 57%)' }}
-            tickLine={false}
-            axisLine={false}
-            width={72}
-          />
+            <YAxis
+              domain={yDomain}
+              tickFormatter={yFormatter}
+              tick={{ fontSize: 11, fill: 'hsl(105, 6%, 57%)' }}
+              tickLine={false}
+              axisLine={false}
+              width={72}
+            />
 
-          <Tooltip
-            formatter={(value: number, name: string) => [
-              tooltipFormatter(value),
-              name === 'withInvestment'
-                ? t('simulation.projection.series_with')
-                : t('simulation.projection.series_without'),
-            ]}
-            labelFormatter={(_, payload) =>
-              (payload as { payload: { tooltipLabel: string } }[])?.[0]?.payload?.tooltipLabel ?? ''
-            }
-            labelStyle={{ fontWeight: 600, color: 'hsl(120, 12%, 20%)' }}
-            contentStyle={{
-              borderRadius: '0.75rem',
-              border: '1px solid hsl(75, 24%, 89%)',
-              fontSize: '0.8125rem',
-            }}
-          />
+            <Tooltip
+              formatter={(value: number, name: string) => [
+                tooltipFormatter(value),
+                name === 'withInvestment'
+                  ? t('simulation.projection.series_with')
+                  : t('simulation.projection.series_without'),
+              ]}
+              labelFormatter={(_, payload) =>
+                (payload as { payload: { tooltipLabel: string } }[])?.[0]
+                  ?.payload?.tooltipLabel ?? ''
+              }
+              labelStyle={{ fontWeight: 600, color: 'hsl(120, 12%, 20%)' }}
+              contentStyle={{
+                borderRadius: '0.75rem',
+                border: '1px solid hsl(75, 24%, 89%)',
+                fontSize: '0.8125rem',
+              }}
+            />
 
-          <Legend
-            formatter={(value) =>
-              value === 'withInvestment'
-                ? t('simulation.projection.series_with')
-                : t('simulation.projection.series_without')
-            }
-            iconType="circle"
-            iconSize={8}
-            wrapperStyle={{ fontSize: '0.8125rem', paddingTop: '8px' }}
-          />
+            <Legend
+              formatter={(value) =>
+                value === 'withInvestment'
+                  ? t('simulation.projection.series_with')
+                  : t('simulation.projection.series_without')
+              }
+              iconType="circle"
+              iconSize={8}
+              wrapperStyle={{ fontSize: '0.8125rem', paddingTop: '8px' }}
+            />
 
-          {/* "Without investment" area — rendered first (behind) */}
-          <Area
-            type="monotone"
-            dataKey="noInvestment"
-            stroke={COLOR_WITHOUT}
-            strokeWidth={1.5}
-            fill="url(#gradWithout)"
-            dot={false}
-            strokeDasharray="4 3"
-          />
+            {/* "Without investment" area — rendered first (behind) */}
+            <Area
+              type="monotone"
+              dataKey="noInvestment"
+              stroke={COLOR_WITHOUT}
+              strokeWidth={1.5}
+              fill="url(#gradWithout)"
+              dot={false}
+              strokeDasharray="4 3"
+            />
 
-          {/* "With investment" area — rendered on top */}
-          <Area
-            type="monotone"
-            dataKey="withInvestment"
-            stroke={COLOR_WITH}
-            strokeWidth={2}
-            fill="url(#gradWith)"
-            dot={false}
-          />
-        </AreaChart>
-      </ResponsiveContainer>
+            {/* "With investment" area — rendered on top */}
+            <Area
+              type="monotone"
+              dataKey="withInvestment"
+              stroke={COLOR_WITH}
+              strokeWidth={2}
+              fill="url(#gradWith)"
+              dot={false}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
 
       <p className="text-xs text-muted-foreground2">
         {t('simulation.projection.disclaimer')}

@@ -83,7 +83,7 @@ export function ProductSlider({
   }
 
   return (
-    <div className="border-b border-border px-4 py-3.5 last:border-b-0">
+    <div className="min-w-0 border-b border-border px-4 py-3.5 last:border-b-0">
       {/* Row 1: name + rate + amount */}
       <div className="mb-2 flex items-center justify-between gap-2">
         <div className="flex min-w-0 items-center gap-2">
@@ -134,8 +134,8 @@ export function ProductSlider({
       </div>
 
       {/* Row 2: timeline inputs */}
-      <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <div>
+      <div className="mt-3 grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="min-w-0">
           <Label htmlFor={startDateId} className="mb-1">
             {t('allocation.timeline.start_date')}
           </Label>
@@ -144,11 +144,11 @@ export function ProductSlider({
             type="date"
             value={timeline.startDate}
             onChange={(e) => handleStartDateChange(e.target.value)}
-            className="w-full rounded-md border border-border bg-background px-2 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+            className="w-full min-w-0 max-w-full rounded-md border border-border bg-background px-2 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
             required
           />
         </div>
-        <div>
+        <div className="min-w-0">
           <Label htmlFor={endDateId} className="mb-1">
             {t('allocation.timeline.end_date_optional')}
             {endDateHint && (
@@ -168,7 +168,7 @@ export function ProductSlider({
                 endDate: e.target.value || undefined,
               })
             }
-            className="w-full rounded-md border border-border bg-background px-2 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+            className="w-full min-w-0 max-w-full rounded-md border border-border bg-background px-2 py-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
           />
         </div>
       </div>

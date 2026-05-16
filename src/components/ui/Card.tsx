@@ -10,7 +10,7 @@ export const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
     <div
       ref={ref}
       className={cn(
-        'rounded-lg border border-border bg-card text-card-foreground',
+        'min-w-0 rounded-lg border border-border bg-card text-card-foreground',
         className,
       )}
       {...props}
@@ -56,5 +56,5 @@ export function CardContent({
   className,
   ...props
 }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('px-5 pb-5', className)} {...props} />;
+  return <div className={cn('min-w-0 px-5 pb-5', className)} {...props} />;
 }

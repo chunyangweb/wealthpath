@@ -1,8 +1,12 @@
-import { forwardRef, type InputHTMLAttributes, type SelectHTMLAttributes } from 'react';
+import {
+  forwardRef,
+  type InputHTMLAttributes,
+  type SelectHTMLAttributes,
+} from 'react';
 import { cn } from '@/lib/utils';
 
 const baseInputClasses = cn(
-  'flex h-9 w-full rounded-md border border-input bg-card px-3 py-1 text-sm shadow-sm',
+  'flex h-9 w-full min-w-0 max-w-full rounded-md border border-input bg-card px-3 py-1 text-sm shadow-sm',
   'placeholder:text-muted-foreground2',
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1',
   'disabled:cursor-not-allowed disabled:opacity-50',
@@ -10,11 +14,12 @@ const baseInputClasses = cn(
 );
 
 /** Generic text input */
-export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(
-  ({ className, ...props }, ref) => (
-    <input ref={ref} className={cn(baseInputClasses, className)} {...props} />
-  ),
-);
+export const Input = forwardRef<
+  HTMLInputElement,
+  InputHTMLAttributes<HTMLInputElement>
+>(({ className, ...props }, ref) => (
+  <input ref={ref} className={cn(baseInputClasses, className)} {...props} />
+));
 Input.displayName = 'Input';
 
 /**
@@ -71,7 +76,7 @@ export const Select = forwardRef<
   <select
     ref={ref}
     className={cn(
-      'flex h-9 w-full rounded-md border border-input bg-card px-3 py-1 text-sm shadow-sm',
+      'flex h-9 w-full min-w-0 max-w-full rounded-md border border-input bg-card px-3 py-1 text-sm shadow-sm',
       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1',
       'disabled:cursor-not-allowed disabled:opacity-50',
       className,

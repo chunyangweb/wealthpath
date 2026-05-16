@@ -34,10 +34,10 @@ export function CashFlowRow({
   const isOneOff = variant === 'one-off';
 
   return (
-    <div className="rounded-md border border-border bg-background/40 p-3">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-12">
+    <div className="min-w-0 rounded-md border border-border bg-background/40 p-3">
+      <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-12">
         {/* Label */}
-        <div className="sm:col-span-3">
+        <div className="min-w-0 sm:col-span-3">
           <Label htmlFor={`label-${row.id}`}>{t('inputs.row.label')}</Label>
           <Input
             id={`label-${row.id}`}
@@ -49,8 +49,10 @@ export function CashFlowRow({
         </div>
 
         {/* Amount */}
-        <div className="sm:col-span-2">
-          <Label htmlFor={`amount-${row.id}`}>{t('inputs.row.amount')} (€)</Label>
+        <div className="min-w-0 sm:col-span-2">
+          <Label htmlFor={`amount-${row.id}`}>
+            {t('inputs.row.amount')} (€)
+          </Label>
           <NumberInput
             id={`amount-${row.id}`}
             value={row.amount === 0 ? undefined : row.amount}
@@ -62,8 +64,10 @@ export function CashFlowRow({
 
         {/* Frequency (hidden for one-off — it's implicitly 'one-off') */}
         {!isOneOff && (
-          <div className="sm:col-span-2">
-            <Label htmlFor={`freq-${row.id}`}>{t('inputs.row.frequency')}</Label>
+          <div className="min-w-0 sm:col-span-2">
+            <Label htmlFor={`freq-${row.id}`}>
+              {t('inputs.row.frequency')}
+            </Label>
             <Select
               id={`freq-${row.id}`}
               value={row.frequency}
@@ -81,9 +85,15 @@ export function CashFlowRow({
         )}
 
         {/* Start date */}
-        <div className={isOneOff ? 'sm:col-span-3' : 'sm:col-span-2'}>
+        <div
+          className={
+            isOneOff ? 'min-w-0 sm:col-span-3' : 'min-w-0 sm:col-span-2'
+          }
+        >
           <Label htmlFor={`start-${row.id}`}>
-            {isOneOff ? t('inputs.row.label') + ' — date' : t('inputs.row.start_date')}
+            {isOneOff
+              ? t('inputs.row.label') + ' — date'
+              : t('inputs.row.start_date')}
           </Label>
           <Input
             id={`start-${row.id}`}
@@ -95,7 +105,7 @@ export function CashFlowRow({
 
         {/* End date (recurring only) */}
         {!isOneOff && (
-          <div className="sm:col-span-2">
+          <div className="min-w-0 sm:col-span-2">
             <Label htmlFor={`end-${row.id}`}>
               {t('inputs.row.end_date_optional')}
             </Label>
