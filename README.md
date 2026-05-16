@@ -1,4 +1,4 @@
-# moneygrowth
+# Wealthpath
 
 > Project your personal cash flow and check liquidity across French savings and investment products.
 
