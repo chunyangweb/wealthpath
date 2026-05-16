@@ -19,6 +19,11 @@ const COLOR_WITH_FILL = 'hsl(92, 33%, 54%)';
 const COLOR_WITHOUT = 'hsl(70, 25%, 63%)'; // muted olive baseline
 const COLOR_WITHOUT_FILL = 'hsl(76, 34%, 82%)'; // pale olive fill
 
+type ProjectionChartPoint = ProjectionPoint & {
+  cashOnlyBand: [number, number];
+  investmentBand: [number, number];
+};
+
 type KpiCardProps = { label: string; value: string; highlight?: boolean };
 
 function KpiCard({ label, value, highlight }: KpiCardProps) {
@@ -60,7 +65,7 @@ export function ProjectionChart({
   const horizonMonths = points.length - 1;
   const tooltipStep = horizonMonths <= 24 ? 1 : horizonMonths <= 36 ? 3 : 6;
 
-  const chartData = useMemo(
+  const rawChartData = useMemo(
     () => points.filter((p) => p.monthIndex % tooltipStep === 0),
     [points, tooltipStep],
   );
@@ -68,18 +73,27 @@ export function ProjectionChart({
   // Narrow the Y-axis to the actual data range so the gap between the two
   // series is clearly visible rather than compressed toward the bottom.
   const yDomain = useMemo((): [number, number] => {
-    if (chartData.length === 0) return [0, 100];
-    const minVal = Math.min(...chartData.map((d) => d.noInvestment));
-    const maxVal = Math.max(...chartData.map((d) => d.withInvestment));
+    if (rawChartData.length === 0) return [0, 100];
+    const minVal = Math.min(...rawChartData.map((d) => d.noInvestment));
+    const maxVal = Math.max(...rawChartData.map((d) => d.withInvestment));
     const range = Math.max(maxVal - minVal, maxVal * 0.02);
     const pad = range * 0.15;
     return [
       Math.max(0, Math.floor((minVal - pad) / 100) * 100),
       Math.ceil((maxVal + pad) / 100) * 100,
     ];
-  }, [chartData]);
+  }, [rawChartData]);
 
   const chartFillBase = yDomain[0];
+  const chartData = useMemo<ProjectionChartPoint[]>(
+    () =>
+      rawChartData.map((point) => ({
+        ...point,
+        cashOnlyBand: [chartFillBase, point.noInvestment],
+        investmentBand: [point.noInvestment, point.withInvestment],
+      })),
+    [rawChartData, chartFillBase],
+  );
 
   const yFormatter = (v: number) =>
     formatCurrency(v, language, { compact: true });
@@ -165,6 +179,7 @@ export function ProjectionChart({
 
             <YAxis
               domain={yDomain}
+              allowDataOverflow
               tickFormatter={yFormatter}
               tick={{ fontSize: 11, fill: 'hsl(105, 6%, 57%)' }}
               tickLine={false}
@@ -173,9 +188,9 @@ export function ProjectionChart({
             />
 
             <Tooltip
-              formatter={(value: number, name: string) => [
-                tooltipFormatter(value),
-                name === 'withInvestment'
+              formatter={(value: number | [number, number], name: string) => [
+                tooltipFormatter(Array.isArray(value) ? value[1] : value),
+                name === 'investmentBand'
                   ? t('simulation.projection.series_with')
                   : t('simulation.projection.series_without'),
               ]}
@@ -193,7 +208,7 @@ export function ProjectionChart({
 
             <Legend
               formatter={(value) =>
-                value === 'withInvestment'
+                value === 'investmentBand'
                   ? t('simulation.projection.series_with')
                   : t('simulation.projection.series_without')
               }
@@ -202,26 +217,24 @@ export function ProjectionChart({
               wrapperStyle={{ fontSize: '0.8125rem', paddingTop: '8px' }}
             />
 
-            {/* Full investment zone - rendered first so the cash layer cuts it. */}
+            {/* Investment gain band: from cash-only up to with-investment. */}
             <Area
               type="monotone"
-              dataKey="withInvestment"
+              dataKey="investmentBand"
               stroke={COLOR_WITH}
               strokeWidth={2.5}
               fill="url(#gradWith)"
               dot={false}
-              baseValue={chartFillBase}
             />
 
-            {/* Cash-only zone - rendered on top to create a solid separator. */}
+            {/* Cash-only band: from the visible axis floor up to cash-only. */}
             <Area
               type="monotone"
-              dataKey="noInvestment"
+              dataKey="cashOnlyBand"
               stroke={COLOR_WITHOUT}
               strokeWidth={2}
               fill="url(#gradWithout)"
               dot={false}
-              baseValue={chartFillBase}
             />
           </AreaChart>
         </ResponsiveContainer>
