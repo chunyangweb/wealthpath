@@ -19,10 +19,6 @@ const COLOR_WITH_FILL = 'hsl(92, 33%, 54%)';
 const COLOR_WITHOUT = 'hsl(70, 25%, 63%)'; // muted olive baseline
 const COLOR_WITHOUT_FILL = 'hsl(76, 34%, 82%)'; // pale olive fill
 
-type ProjectionChartPoint = ProjectionPoint & {
-  investmentGain: number;
-};
-
 type KpiCardProps = { label: string; value: string; highlight?: boolean };
 
 function KpiCard({ label, value, highlight }: KpiCardProps) {
@@ -64,14 +60,8 @@ export function ProjectionChart({
   const horizonMonths = points.length - 1;
   const tooltipStep = horizonMonths <= 24 ? 1 : horizonMonths <= 36 ? 3 : 6;
 
-  const chartData = useMemo<ProjectionChartPoint[]>(
-    () =>
-      points
-        .filter((p) => p.monthIndex % tooltipStep === 0)
-        .map((p) => ({
-          ...p,
-          investmentGain: Math.max(0, p.withInvestment - p.noInvestment),
-        })),
+  const chartData = useMemo(
+    () => points.filter((p) => p.monthIndex % tooltipStep === 0),
     [points, tooltipStep],
   );
 
@@ -88,6 +78,8 @@ export function ProjectionChart({
       Math.ceil((maxVal + pad) / 100) * 100,
     ];
   }, [chartData]);
+
+  const chartFillBase = yDomain[0];
 
   const yFormatter = (v: number) =>
     formatCurrency(v, language, { compact: true });
@@ -181,22 +173,12 @@ export function ProjectionChart({
             />
 
             <Tooltip
-              formatter={(value: number, name: string, item) => {
-                const point = (item as { payload?: ProjectionChartPoint })
-                  .payload;
-
-                if (name === 'investmentGain') {
-                  return [
-                    tooltipFormatter(point?.withInvestment ?? value),
-                    t('simulation.projection.series_with'),
-                  ];
-                }
-
-                return [
-                  tooltipFormatter(value),
-                  t('simulation.projection.series_without'),
-                ];
-              }}
+              formatter={(value: number, name: string) => [
+                tooltipFormatter(value),
+                name === 'withInvestment'
+                  ? t('simulation.projection.series_with')
+                  : t('simulation.projection.series_without'),
+              ]}
               labelFormatter={(_, payload) =>
                 (payload as { payload: { tooltipLabel: string } }[])?.[0]
                   ?.payload?.tooltipLabel ?? ''
@@ -211,7 +193,7 @@ export function ProjectionChart({
 
             <Legend
               formatter={(value) =>
-                value === 'investmentGain'
+                value === 'withInvestment'
                   ? t('simulation.projection.series_with')
                   : t('simulation.projection.series_without')
               }
@@ -220,26 +202,26 @@ export function ProjectionChart({
               wrapperStyle={{ fontSize: '0.8125rem', paddingTop: '8px' }}
             />
 
-            {/* Cash-only zone - bottom layer */}
+            {/* Full investment zone - rendered first so the cash layer cuts it. */}
             <Area
               type="monotone"
-              dataKey="noInvestment"
-              stackId="projection"
-              stroke={COLOR_WITHOUT}
-              strokeWidth={2}
-              fill="url(#gradWithout)"
-              dot={false}
-            />
-
-            {/* Investment gain zone - stacked above cash-only */}
-            <Area
-              type="monotone"
-              dataKey="investmentGain"
-              stackId="projection"
+              dataKey="withInvestment"
               stroke={COLOR_WITH}
               strokeWidth={2.5}
               fill="url(#gradWith)"
               dot={false}
+              baseValue={chartFillBase}
+            />
+
+            {/* Cash-only zone - rendered on top to create a solid separator. */}
+            <Area
+              type="monotone"
+              dataKey="noInvestment"
+              stroke={COLOR_WITHOUT}
+              strokeWidth={2}
+              fill="url(#gradWithout)"
+              dot={false}
+              baseValue={chartFillBase}
             />
           </AreaChart>
         </ResponsiveContainer>
