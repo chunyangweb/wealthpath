@@ -15,10 +15,12 @@ import { useSettingsStore } from '@/state/settingsStore';
 import { formatCurrency } from '@/lib/utils/formatCurrency';
 
 // Palette position 6 (medium-dark sage) for the "with investment" line;
-// position 2 (very light olive) for the muted "without" baseline.
+// positions 3-4 for the muted "without" baseline. The two fills are kept
+// close to the liquidity palette but separated enough to read as two zones.
 const COLOR_WITH = 'hsl(87, 31%, 39%)'; // #728545
-const COLOR_WITH_FILL = 'hsl(83, 28%, 68%)'; // lighter sage fill
-const COLOR_WITHOUT = 'hsl(70, 25%, 73%)'; // pale olive — clearly subordinate
+const COLOR_WITH_FILL = 'hsl(92, 33%, 54%)'; // clear sage fill
+const COLOR_WITHOUT = 'hsl(70, 25%, 63%)'; // muted olive baseline
+const COLOR_WITHOUT_FILL = 'hsl(76, 34%, 82%)'; // pale olive fill
 
 type KpiCardProps = { label: string; value: string; highlight?: boolean };
 
@@ -131,24 +133,24 @@ export function ProjectionChart({
                 <stop
                   offset="5%"
                   stopColor={COLOR_WITH_FILL}
-                  stopOpacity={0.8}
+                  stopOpacity={0.55}
                 />
                 <stop
                   offset="95%"
                   stopColor={COLOR_WITH_FILL}
-                  stopOpacity={0.1}
+                  stopOpacity={0.18}
                 />
               </linearGradient>
               <linearGradient id="gradWithout" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
-                  stopColor={COLOR_WITHOUT}
-                  stopOpacity={0.25}
+                  stopColor={COLOR_WITHOUT_FILL}
+                  stopOpacity={0.7}
                 />
                 <stop
                   offset="95%"
-                  stopColor={COLOR_WITHOUT}
-                  stopOpacity={0.05}
+                  stopColor={COLOR_WITHOUT_FILL}
+                  stopOpacity={0.35}
                 />
               </linearGradient>
             </defs>
@@ -206,7 +208,7 @@ export function ProjectionChart({
               type="monotone"
               dataKey="noInvestment"
               stroke={COLOR_WITHOUT}
-              strokeWidth={1.5}
+              strokeWidth={2}
               fill="url(#gradWithout)"
               dot={false}
               strokeDasharray="4 3"
@@ -217,7 +219,7 @@ export function ProjectionChart({
               type="monotone"
               dataKey="withInvestment"
               stroke={COLOR_WITH}
-              strokeWidth={2}
+              strokeWidth={2.5}
               fill="url(#gradWith)"
               dot={false}
             />
