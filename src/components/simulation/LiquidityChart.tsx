@@ -13,6 +13,7 @@ import {
 import type { LiquidityPoint } from '@/lib/finance/liquidity';
 import { useSettingsStore } from '@/state/settingsStore';
 import { formatCurrency } from '@/lib/utils/formatCurrency';
+import { cn } from '@/lib/utils';
 
 // Three picks from the palette image — positions 7, 5, 3 (dark → light),
 // excluding the darkest swatch. Liquid = richest, Locked = most muted.
@@ -23,11 +24,21 @@ const COLOR_SEMI_FILL = 'hsl(83, 28%, 68%)';
 const COLOR_LOCKED = 'hsl(76, 34%, 67%)'; // light olive (#c3ca8e)
 const COLOR_LOCKED_FILL = 'hsl(76, 34%, 82%)';
 
-type KpiCardProps = { label: string; value: string; dotColor: string };
+type KpiCardProps = {
+  label: string;
+  value: string;
+  dotColor: string;
+  className?: string;
+};
 
-function KpiCard({ label, value, dotColor }: KpiCardProps) {
+function KpiCard({ label, value, dotColor, className }: KpiCardProps) {
   return (
-    <div className="rounded-lg border border-border bg-card px-4 py-3">
+    <div
+      className={cn(
+        'min-w-0 rounded-lg border border-border bg-card px-4 py-3',
+        className,
+      )}
+    >
       <div className="flex items-center gap-1.5">
         <span
           className="inline-block h-2 w-2 flex-shrink-0 rounded-full"
@@ -35,7 +46,7 @@ function KpiCard({ label, value, dotColor }: KpiCardProps) {
         />
         <p className="text-xs text-muted-foreground">{label}</p>
       </div>
-      <p className="mt-1 text-lg font-semibold tabular-nums text-foreground">
+      <p className="mt-1 break-words text-lg font-semibold tabular-nums text-foreground">
         {value}
       </p>
     </div>
@@ -75,7 +86,7 @@ export function LiquidityChart({
   return (
     <div className="min-w-0 space-y-4">
       {/* KPI row */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         <KpiCard
           label={t('simulation.liquidity.pool_liquid')}
           value={formatCurrency(finalLiquid, language)}
@@ -90,6 +101,7 @@ export function LiquidityChart({
           label={t('simulation.liquidity.pool_locked')}
           value={formatCurrency(finalLocked, language)}
           dotColor={COLOR_LOCKED}
+          className="col-span-2 sm:col-span-1"
         />
       </div>
 
